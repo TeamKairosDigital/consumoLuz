@@ -67,16 +67,21 @@ async function calcularConsumo() {
         PagoTotal = 0;
         consumoKWh = 0;
 
-        // Calculo de consumo básico
-        kWhBasic = (parseFloat(basico) * 150);
+         // Calculo de consumo total en KWh
+         consumoKWh = lecturaActualMedidor - lecturaActual;
 
         // Calculo de consumo intermedio
         if (kWhActual > 150) {
+
+            // Calculo de consumo básico
+            kWhBasic = (parseFloat(basico) * 150);
+
             kWhIntermedio = (parseFloat(intermedio) * (kWhActual - 150));
+        }else{
+            // Calculo de consumo básico
+            kWhBasic = (parseFloat(basico) * consumoKWh);
         }
 
-        // Calculo de consumo total en KWh
-        consumoKWh = lecturaActualMedidor - lecturaActual;
 
         // Calculo de consumo total
         consumo = kWhBasic + kWhIntermedio;
