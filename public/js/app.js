@@ -55,6 +55,7 @@ async function calcularConsumo() {
 
     let basico = document.getElementById("basico").value;
     let intermedio = document.getElementById("intermedio").value;
+    let excedente = document.getElementById("excedente").value;
     let lecturaActual = document.getElementById("lecturaActual").value;
     let lecturaActualMedidor = document.getElementById("lecturaActualMedidor").value;
 
@@ -63,28 +64,37 @@ async function calcularConsumo() {
     if (kWhActual > 0) {
         kWhBasic = 0;
         kWhIntermedio = 0;
+        kWhExcedente = 0;
         consumo = 0;
         PagoTotal = 0;
         consumoKWh = 0;
 
-         // Calculo de consumo total en KWh
-         consumoKWh = lecturaActualMedidor - lecturaActual;
+        // Calculo de consumo total en KWh
+        consumoKWh = lecturaActualMedidor - lecturaActual;
 
-        // Calculo de consumo intermedio
-        if (kWhActual > 150) {
-
+        // Calculo de consumo según rangos
+        if (kWhActual > 350) {
+            // Calculo de consumo básico (primeros 150 kWh)
+            kWhBasic = (parseFloat(basico) * 150);
+            
+            // Calculo de consumo intermedio (siguientes 200 kWh)
+            kWhIntermedio = (parseFloat(intermedio) * 200);
+            
+            // Calculo de consumo excedente (resto)
+            kWhExcedente = (parseFloat(excedente) * (kWhActual - 350));
+        } else if (kWhActual > 150) {
             // Calculo de consumo básico
             kWhBasic = (parseFloat(basico) * 150);
-
+            
+            // Calculo de consumo intermedio
             kWhIntermedio = (parseFloat(intermedio) * (kWhActual - 150));
-        }else{
+        } else {
             // Calculo de consumo básico
             kWhBasic = (parseFloat(basico) * consumoKWh);
         }
 
-
         // Calculo de consumo total
-        consumo = kWhBasic + kWhIntermedio;
+        consumo = kWhBasic + kWhIntermedio + kWhExcedente;
         iva = Number(consumo.toFixed(2)) * .16;
 
         PagoTotal = Number(consumo.toFixed(2)) + Number(iva.toFixed(2));
